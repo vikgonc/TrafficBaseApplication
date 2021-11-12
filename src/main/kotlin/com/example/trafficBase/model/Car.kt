@@ -1,6 +1,7 @@
 package com.example.trafficBase.model
 
-import org.springframework.format.annotation.DateTimeFormat
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -19,13 +20,18 @@ data class Car(
     val licenseNumber: String? = null,
 
     @Column(name = "first_change_date")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     val firstChangeDate: Date? = null,
 
     @Column(name = "last_change_date")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     val lastChangeDate: Date? = null,
 
     @ManyToOne
-    val owner: Owner? = null
+    @JsonIgnore
+    val owner: Owner? = null,
+
+    @OneToMany(fetch = FetchType.LAZY,cascade = [CascadeType.ALL])
+    @JsonIgnore
+    var TDP: MutableList<LineInTDP>? = null
 )
