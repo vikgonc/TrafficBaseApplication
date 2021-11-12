@@ -5,17 +5,17 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "lines")
-data class LineInTDP(
+@Table(name = "notes")
+data class Note(
     @Id
-    @Column(name = "line_id")
+    @Column(name = "note_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "change_date")
+    @Column(name = "note_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    val ChangeDate: Date? = null,
+    val changeDate: Date? = null,
 
     @ManyToOne
-    val owner:Owner? = null,
+    val owner: Owner? = null
 )

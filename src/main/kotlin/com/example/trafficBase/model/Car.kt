@@ -33,5 +33,5 @@ data class Car(
 
     @OneToMany(fetch = FetchType.LAZY,cascade = [CascadeType.ALL])
     @JsonIgnore
-    var TDP: MutableList<LineInTDP>? = null
+    var passport: MutableList<Note>? = null
 )
