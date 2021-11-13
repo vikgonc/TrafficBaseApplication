@@ -4,7 +4,9 @@ import com.example.trafficBase.exception.BadRequestException
 import com.example.trafficBase.exception.NotFoundException
 import com.example.trafficBase.model.Car
 import com.example.trafficBase.model.CarWithOwnerName
+import com.example.trafficBase.model.Note
 import com.example.trafficBase.repository.CarRepository
+import com.example.trafficBase.repository.NoteRepository
 import com.example.trafficBase.repository.OwnerRepository
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/cars")
 class CarsController(
     private val carRepo: CarRepository,
-    private val ownerRepo: OwnerRepository
+    private val ownerRepo: OwnerRepository,
+    private val noteRepo: NoteRepository
 ) {
-    @GetMapping
+    @GetMapping // get all cars
     fun all(): Iterable<Car> = carRepo.findAll()
 
     @GetMapping("registered") // get all registered cars
@@ -28,33 +31,44 @@ class CarsController(
         return res
     }
 
-    @PostMapping // create car
-    @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody car: Car) {
-        carRepo.save(car)
+    @GetMapping("passport/{id}") // get passport by id
+    fun carInfo(@PathVariable id: Long): Iterable<Note>? {
+        val res = carRepo.findById(id)
+        if (!res.isPresent)
+            throw NotFoundException()
+        val currentPassport = noteRepo.findNotesByCarIdSorted(id)
+        return if (!currentPassport.isPresent)
+            null
+        else
+            currentPassport.get()
     }
+
 
     @GetMapping("{id}") // find car by id
     @ResponseStatus(HttpStatus.FOUND)
     fun readById(@PathVariable id: Long): CarWithOwnerName {
         val res = carRepo.findById(id)
-        if (res.isPresent) {
-            return carWithName(res.get())
-        } else
+        if (!res.isPresent)
             throw NotFoundException()
+        return carWithName(res.get())
     }
 
     @GetMapping("number/{num}") // find car by number
     @ResponseStatus(HttpStatus.FOUND)
     fun readByNumber(@PathVariable num: String): CarWithOwnerName {
         val res = carRepo.findCarByNumber(num)
-        if (res.isPresent)
-            return carWithName(res.get())
-        else
+        if (!res.isPresent)
             throw NotFoundException()
+        return carWithName(res.get())
     }
 
-    @PatchMapping("register/{id}") // registering car
+    @PostMapping // create car
+    @ResponseStatus(HttpStatus.CREATED)
+    fun create(@RequestBody car: Car) {
+        carRepo.save(car)
+    }
+
+    @PatchMapping("register/{id}") // registering car by id
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updateNumber(@PathVariable id: Long, @RequestBody car: Car) {
         val res = carRepo.findById(id)
@@ -69,7 +83,7 @@ class CarsController(
             carRepo.save(foundCar.copy(number = car.number))
     }
 
-    @PatchMapping("unregister/{id}") // unregister car
+    @PatchMapping("unregister/{id}") // unregister car by id
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeNumber(@PathVariable id: Long) {
         val res = carRepo.findById(id)
