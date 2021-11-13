@@ -15,10 +15,10 @@ data class Owner(
     @Column(name = "full_name")
     val fullName: String? = null,
 
-//    @Column(name = "reg_date")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-//    val carDate: Date? = null,
+    @Column(name = "reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    val regDate: Date? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY)
     val cars: MutableList<Car>? = null
 )

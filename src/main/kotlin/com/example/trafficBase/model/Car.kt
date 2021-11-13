@@ -16,22 +16,18 @@ data class Car(
     @Column(name = "title")
     val title: String? = null,
 
-    @Column(name = "license_number")
-    val licenseNumber: String? = null,
+    @Column(name = "number")
+    val number: String? = null,
 
-    @Column(name = "first_change_date")
+    @Column(name = "reg_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    val firstChangeDate: Date? = null,
+    val regDate: Date? = null,
 
     @Column(name = "last_change_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     val lastChangeDate: Date? = null,
 
-    @ManyToOne
-    @JsonIgnore
-    val owner: Owner? = null,
-
-    @OneToMany(fetch = FetchType.LAZY,cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY)//,cascade = [CascadeType.ALL])
     @JsonIgnore
     var passport: MutableList<Note>? = null
 )
