@@ -20,14 +20,14 @@ data class Car(
     val number: String? = null,
 
     @Column(name = "reg_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     val regDate: Date? = null,
 
     @Column(name = "last_change_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     val lastChangeDate: Date? = null,
 
-    @OneToMany(fetch = FetchType.LAZY)//,cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY)
     @JsonIgnore
     var passport: MutableList<Note>? = null
 )

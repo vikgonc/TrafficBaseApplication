@@ -13,7 +13,7 @@ data class Note(
     val id: Long? = null,
 
     @Column(name = "note_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     val changeDate: Date? = null,
 
     @ManyToOne

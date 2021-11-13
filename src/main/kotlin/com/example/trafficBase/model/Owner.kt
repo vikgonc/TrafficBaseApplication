@@ -16,7 +16,7 @@ data class Owner(
     val fullName: String? = null,
 
     @Column(name = "reg_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     val regDate: Date? = null,
 
     @OneToMany(fetch = FetchType.LAZY)
