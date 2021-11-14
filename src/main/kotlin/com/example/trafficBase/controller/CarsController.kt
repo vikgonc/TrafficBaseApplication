@@ -32,17 +32,12 @@ class CarsController(
     }
 
     @GetMapping("passport/{id}") // get passport by id
-    fun carInfo(@PathVariable id: Long): Iterable<Note>? {
+    fun carInfo(@PathVariable id: Long): Iterable<Note> {
         val res = carRepo.findById(id)
         if (!res.isPresent)
             throw NotFoundException()
-        val currentPassport = noteRepo.findNotesByCarIdSorted(id)
-        return if (!currentPassport.isPresent)
-            null
-        else
-            currentPassport.get()
+        return noteRepo.findNotesByCarIdSorted(id).get()
     }
-
 
     @GetMapping("{id}") // find car by id
     @ResponseStatus(HttpStatus.FOUND)

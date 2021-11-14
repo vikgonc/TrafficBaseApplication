@@ -1,6 +1,7 @@
 package com.example.trafficBase.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -19,6 +20,6 @@ data class Owner(
     @JsonFormat(pattern = "dd-MM-yyyy")
     val regDate: Date? = null,
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val cars: MutableList<Car>? = null
 )

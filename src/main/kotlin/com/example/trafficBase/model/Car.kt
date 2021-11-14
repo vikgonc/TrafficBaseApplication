@@ -25,9 +25,9 @@ data class Car(
 
     @Column(name = "last_change_date")
     @JsonFormat(pattern = "dd-MM-yyyy")
-    val lastChangeDate: Date? = null,
+    var lastChangeDate: Date? = null,
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JsonIgnore
     var passport: MutableList<Note>? = null
 )
