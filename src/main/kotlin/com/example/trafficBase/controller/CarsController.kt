@@ -9,6 +9,7 @@ import com.example.trafficBase.repository.CarRepository
 import com.example.trafficBase.repository.NoteRepository
 import com.example.trafficBase.repository.OwnerRepository
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -32,20 +33,33 @@ class CarsController(
     }
 
     @GetMapping("passport/{id}") // get passport by id
-    fun carInfo(@PathVariable id: Long): Iterable<Note> {
+    fun carInfo(@PathVariable id: Long): ResponseEntity<List<Note>> {
         val res = carRepo.findById(id)
         if (!res.isPresent)
-            throw NotFoundException()
-        return noteRepo.findNotesByCarIdSorted(id).get()
+            return ResponseEntity
+                .status(452)
+                .body(listOf())
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(noteRepo.findNotesByCarIdSorted(id).get())
     }
 
     @GetMapping("{id}") // find car by id
-    @ResponseStatus(HttpStatus.FOUND)
-    fun readById(@PathVariable id: Long): CarWithOwnerName {
-        val res = carRepo.findById(id)
-        if (!res.isPresent)
-            throw NotFoundException()
-        return carWithName(res.get())
+    //@ResponseStatus(HttpStatus.FOUND)
+    fun readById(@PathVariable id: Long): ResponseEntity<Map<String, Any>>? {
+
+        val res = carRepo.findCarById(id) ?:
+        return ResponseEntity
+            .status(451)
+            .body(null)
+
+        val response = HashMap<String, Any>()
+        response["car"] = res
+        response["owner"] = "Vasek Bolvan"
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(response)
     }
 
     @GetMapping("number/{num}") // find car by number
