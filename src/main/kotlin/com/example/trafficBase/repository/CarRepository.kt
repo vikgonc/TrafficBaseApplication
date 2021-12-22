@@ -6,4 +6,5 @@ import java.util.*
 
 interface CarRepository : CrudRepository<Car, Long> {
     fun findCarByNumber(number: String?): Optional<Car>
+    fun findCarById(id: Long): Car?
 }

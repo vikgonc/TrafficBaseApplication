@@ -14,7 +14,7 @@ data class Car(
     val id: Long? = null,
 
     @Column(name = "title")
-    val title: String? = null,
+    val title: String,
 
     @Column(name = "number")
     val number: String? = null,
