@@ -2,14 +2,24 @@ package com.example.trafficBase.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.util.*
-import javax.persistence.*
+import java.time.LocalDateTime
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.Table
+import javax.validation.constraints.Pattern
 
 @Entity
 @Table(name = "cars")
 data class Car(
     @Id
-    @Column(name = "car_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
@@ -17,17 +27,24 @@ data class Car(
     val title: String,
 
     @Column(name = "number")
-    val number: String? = null,
+    @field:Pattern(regexp = "^[авекмнорстух][0-9]{3}[авекмнорстух]{2}[0-9]{2,3}$")
+    val number: String,
 
-    @Column(name = "reg_date")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    val regDate: Date? = null,
+    @Column(name = "created")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    val created: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "last_change_date")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    var lastChangeDate: Date? = null,
+    @Column(name = "changed")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    val changed: LocalDateTime = LocalDateTime.now(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne
+    val owner: Owner? = null,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE], mappedBy = "car")
     @JsonIgnore
-    var passport: MutableList<Note>? = null
+    val passport: List<Note> = listOf(),
+
+    @JsonIgnore
+    val archived: LocalDateTime? = null
 )
