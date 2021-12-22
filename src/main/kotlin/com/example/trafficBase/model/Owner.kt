@@ -2,24 +2,36 @@ package com.example.trafficBase.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.util.*
-import javax.persistence.*
+import java.time.LocalDateTime
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
 @Table(name = "owners")
 data class Owner(
     @Id
-    @Column(name = "owner_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "full_name")
-    val fullName: String? = null,
+    @Column(name = "name")
+    val name: String,
 
-    @Column(name = "reg_date")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    val regDate: Date? = null,
+    @Column(name = "created")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    val created: LocalDateTime = LocalDateTime.now(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val cars: MutableList<Car>? = null
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE], mappedBy = "owner")
+    val cars: List<Car> = listOf(),
+
+    @JsonIgnore
+    val archived: LocalDateTime? = null
 )
